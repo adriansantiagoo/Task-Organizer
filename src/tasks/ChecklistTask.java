@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ChecklistTask extends Task{
+public class ChecklistTask extends Task implements Reschedulable{
     private final List<ChecklistItem> items = new ArrayList<>();
     private LocalDate dueDate;
 
@@ -59,5 +59,10 @@ public class ChecklistTask extends Task{
 
         double urgency = deadlineWeight + calculateUrgencyByPercentage();
         return (int) Math.round(urgency);
+    }
+
+    @Override
+    public void reschedule(LocalDate newDate) {
+        dueDate = newDate;
     }
 }

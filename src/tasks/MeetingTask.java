@@ -1,13 +1,13 @@
 package tasks;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
+import java.time.LocalTime;
 import java.util.Optional;
 
-import static java.time.temporal.ChronoUnit.HOURS;
 import static java.time.temporal.ChronoUnit.MINUTES;
 
-public class MeetingTask extends Task{
+public class MeetingTask extends Task implements Reschedulable{
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private String location;
@@ -43,5 +43,15 @@ public class MeetingTask extends Task{
         if (minutesRemaining > 1440) return 1;   // more than a day out
         if (minutesRemaining > 60)   return 2;   // within the last day
         return 3;                                // within the final hour
+    }
+
+    @Override
+    public void reschedule(LocalDate newDate) {
+        // assumes same-day meeting
+        LocalTime originalStartTime = startTime.toLocalTime();
+        startTime = newDate.atTime(originalStartTime);
+
+        LocalTime originalEndTime = endTime.toLocalTime();
+        endTime = newDate.atTime(originalEndTime);
     }
 }

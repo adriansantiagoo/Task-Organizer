@@ -2,7 +2,7 @@ package tasks;
 
 import java.time.LocalDate;
 
-public class Milestone {
+public class Milestone implements Reschedulable{
     private String title;
     private LocalDate dueDate;
     private boolean isDone;
@@ -26,5 +26,10 @@ public class Milestone {
     }
     public void setDone(boolean done) {
         isDone = done;
+    }
+
+    @Override
+    public void reschedule(LocalDate newDate) {
+        dueDate = newDate;
     }
 }

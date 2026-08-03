@@ -3,7 +3,7 @@ package tasks;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
-public class SimpleTask extends Task{
+public class SimpleTask extends Task implements Reschedulable{
     private LocalDate dueDate;
 
     public SimpleTask(String title, LocalDate dueDate) {
@@ -23,5 +23,10 @@ public class SimpleTask extends Task{
         if (daysRemaining >= 3) return 2;
         if (daysRemaining >= 1) return 3;
         return 4;
+    }
+
+    @Override
+    public void reschedule(LocalDate newDate) {
+        dueDate = newDate;
     }
 }
