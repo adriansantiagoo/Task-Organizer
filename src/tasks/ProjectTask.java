@@ -65,4 +65,8 @@ public class ProjectTask extends Task{
         double urgency = overallProgressWeight + calculateUrgencyByDueDate();
         return (int) Math.round(urgency);
     }
+
+    @Override
+    public LocalDate getScheduledDate() {
+        return findNextDueDate().orElse(LocalDate.now());    }
 }

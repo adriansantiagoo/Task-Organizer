@@ -26,6 +26,11 @@ public class SimpleTask extends Task implements Reschedulable{
     }
 
     @Override
+    public LocalDate getScheduledDate() {
+        return dueDate;
+    }
+
+    @Override
     public void reschedule(LocalDate newDate) {
         dueDate = newDate;
     }

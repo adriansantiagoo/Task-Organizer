@@ -46,6 +46,11 @@ public class MeetingTask extends Task implements Reschedulable{
     }
 
     @Override
+    public LocalDate getScheduledDate() {
+        return startTime.toLocalDate();
+    }
+
+    @Override
     public void reschedule(LocalDate newDate) {
         // assumes same-day meeting
         LocalTime originalStartTime = startTime.toLocalTime();
