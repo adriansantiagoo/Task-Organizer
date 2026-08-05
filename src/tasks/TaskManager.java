@@ -3,6 +3,7 @@ package tasks;
 import datastructures.BST;
 import datastructures.GenericStack;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -26,6 +27,47 @@ public class TaskManager {
         if (target.isDone()) return;
         target.setDone(true);
         undoStack.push(new UndoAction(ActionType.COMPLETE, target));
+    }
+
+    public void rescheduleTask(int id, LocalDate newDate){
+        Task task = getTaskById(id);
+        LocalDate oldDate = task.getScheduledDate();
+
+        TaskDay oldTaskDay = new TaskDay(task.getScheduledDate());
+        throwIfNotReschedulable(task);
+
+        moveTaskToDate(task, newDate);
+        undoStack.push(new UndoAction(ActionType.RESCHEDULE, task, oldDate));
+    }
+
+    public void undo(){
+        if (undoStack.isEmpty()) return;
+
+        Task task = undoStack.peek().getTask();
+        LocalDate previousDate = undoStack.peek().getPreviousDate();
+        tasks.ActionType type = undoStack.pop().getType();
+
+        TaskDay taskDay = new TaskDay(task.getScheduledDate());
+
+        if (type.equals(ActionType.ADD)){
+            tasksById.remove(task.getId());
+            daysBst.find(taskDay).removeTask(task);
+        } else if (type.equals(ActionType.COMPLETE)){
+            task.setDone(false);
+        } else {
+            moveTaskToDate(task, previousDate);
+        }
+    }
+
+    private void moveTaskToDate(Task task, LocalDate newDate){
+        TaskDay taskDay = new TaskDay(task.getScheduledDate());
+        TaskDay currentDay = daysBst.find(taskDay);
+
+        currentDay.removeTask(task);
+        if (task instanceof Reschedulable){
+            ((Reschedulable) task).reschedule(newDate);
+        }
+        findFirstThenAppend(task);
     }
 
     private void findFirstThenAppend(Task task){
@@ -65,5 +107,11 @@ public class TaskManager {
     private void throwIfIdNotFound(int id){
         if (!tasksById.containsKey(id))
             throw new TaskNotFoundException("Id not found!");
+    }
+
+    private void throwIfNotReschedulable(Task t){
+        if (!(t instanceof Reschedulable r)){
+            throw new NotReschedulableException("Not a reschedulable task!");
+        }
     }
 }

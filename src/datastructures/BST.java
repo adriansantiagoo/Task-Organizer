@@ -47,6 +47,17 @@ public class BST <T extends Comparable<T>> {
         return contains(root, data);
     }
 
+    private T find(Node root, T key){
+        if (root == null) return null;
+        int cmp = key.compareTo(root.getData());
+        if (cmp == 0) return root.getData();                     // if the key is the root.getData
+        if (cmp < 0)  return find(root.getLeft(), key);     // if the key is smaller than the root.getData
+        return find(root.getRight(), key);                  // if the key is greater than the root.getData
+    }
+    public T find(T key){
+        return find(root, key);
+    }
+
     public void throwIfDuplicate(T data){
         if (contains(root, data)){
             throw new DuplicateValueException("The data already exists!");
@@ -70,7 +81,6 @@ public class BST <T extends Comparable<T>> {
     public List<T> inorderTraversal(){
         return inorderHelper(root, new ArrayList<>());
     }
-
     private List<T> inorderHelper(Node root, List<T> result){
         if (root == null) return result;
 
@@ -126,16 +136,5 @@ public class BST <T extends Comparable<T>> {
         }
 
         return result;
-    }
-
-    private T find(Node root, T key){
-        if (root == null) return null;
-        int cmp = key.compareTo(root.getData());
-        if (cmp == 0) return root.getData();                     // if the key is the root.getData
-        if (cmp < 0)  return find(root.getLeft(), key);     // if the key is smaller than the root.getData
-        return find(root.getRight(), key);                  // if the key is greater than the root.getData
-    }
-    public T find(T key){
-        return find(root, key);
     }
 }

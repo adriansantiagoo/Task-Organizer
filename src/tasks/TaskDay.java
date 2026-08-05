@@ -23,6 +23,9 @@ public class TaskDay implements Comparable<TaskDay>{
     public void addTask(Task task) {
         tasks.add(task);
     }
+    public void removeTask(Task task) {
+        tasks.remove(task);
+    }
 
     @Override
     public int compareTo(TaskDay t) {
