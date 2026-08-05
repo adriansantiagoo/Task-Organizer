@@ -18,6 +18,14 @@ public class TaskManager {
     public void addTask(Task task){
         tasksById.put(task.getId(), task);
         findFirstThenAppend(task);
+        undoStack.push(new UndoAction(ActionType.ADD, task));
+    }
+
+    public void completeTask(int id){
+        Task target = getTaskById(id);
+        if (target.isDone()) return;
+        target.setDone(true);
+        undoStack.push(new UndoAction(ActionType.COMPLETE, target));
     }
 
     private void findFirstThenAppend(Task task){
